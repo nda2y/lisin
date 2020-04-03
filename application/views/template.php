@@ -64,6 +64,8 @@
                                    ORDER BY 'users_groups'.'groups_id' ASC
                                 ";
 
+                        $menu11 = $this->db->Query($queryMenu)->result_array();
+
                         -->
 
                         
@@ -71,16 +73,25 @@
                         <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
                             <div class="menu_section">
 
-                                <H2>General</H2>
+                                
 
-                                    
+                                <?php
+                                $user_group = $this->ion_auth->get_users_groups();
 
+                                foreach ($user_group->result_array() as $usg) {
+                                   
+                                    echo "<h2>".$usg['name']."</h2>";
+                                    }
+                                ?>
+                            </div>
                                 <ul class="nav side-menu">   
 
                                     <?php
 
                                     $this->db->where_not_in('id',array(0));
-                                    $main_menu = $this->db->get_where('menu',array('isParent'=>0));
+                                    $main_menu = $this->db->get_where('menu',array('group_id'=>$usg['id']));
+                                    $this->db->get_where('menu',array('isParent'=>0));
+
                                     foreach ($main_menu->result() as $main){
                                         // chek apakah punya sub menu ?
                                         $sub_menu = $this->db->get_where('menu',array('isParent'=>$main->id));
